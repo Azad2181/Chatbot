@@ -1,7 +1,12 @@
-# SteadFast Parcel Tracking Bot
+# This is Parcel Tracking Bot
+
+Check it: ![chatsss](https://github.com/user-attachments/assets/cb6c0809-fc91-4a59-b0cf-898989248d07)
+
+https://github.com/user-attachments/assets/728e7838-e871-466f-92ca-08965cc5d7c5
+
 
 ## Overview
-SteadFast Parcel Tracking Bot is a user-friendly and reliable bot designed to keep you updated about your shipments. With real-time tracking and prompt responses, this bot ensures an efficient parcel management experience.
+This Parcel Tracking Bot is a user-friendly and reliable bot designed to keep you updated about your shipments. With real-time tracking and prompt responses, this bot ensures an efficient parcel management experience.
 
 ---
 
@@ -35,7 +40,7 @@ SteadFast Parcel Tracking Bot is a user-friendly and reliable bot designed to ke
 4. **Initialize the Database**:
    Ensure MySQL is installed and set up. Update the `db_config` in `bot.py` with your database credentials.
    ```bash
-   mysql -u root -p < scripts/init_db.sql
+   MySQL -u root -p < scripts/init_db.sql
    ```
 
 5. **Run the Application**:
@@ -95,13 +100,13 @@ Update the following keys in the `config.json` file:
 
 - **gemini_api_key**: Your API key for the Gemini generative AI model.
 - **name**: Name of the bot.
-- **description**: A short description of the bot.
+- **Description**: A short description of the bot.
 
 ---
 
 ## Contribution
 
-We welcome contributions to improve SteadFast Parcel Tracking Bot. Please follow these steps:
+We welcome contributions to improve this Parcel Tracking Bot. Please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch (`feature/your-feature`).
@@ -114,12 +119,6 @@ We welcome contributions to improve SteadFast Parcel Tracking Bot. Please follow
 This project is licensed under the MIT License. See `LICENSE` for more details.
 
 ---
-
-## Contact
-
-For support or inquiries, please contact:
-- **Email**: support@steadfast.com
-- **Community**: [SteadFast Community Plus Group](#)
 
 ---
 
