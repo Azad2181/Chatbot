@@ -8,18 +8,29 @@ from pydantic import BaseModel
 import mysql.connector
 from fastapi.middleware.cors import CORSMiddleware
 
-# Database Configuration
-db_config = {
-    "host": "localhost",
-    "user": "root",
-    "password": "root",
-    "database": "mybd"
-}
+# # Database Configuration
+# DB_CONFIG = {
+#     "host": "localhost",
+#     "user": "root",
+#     "password": "root",
+#     "database": "mybd"
+# }
 
 
-def get_db_connection():
-    """Establish and return a database connection"""
-    return mysql.connector.connect(**db_config)
+# def get_db_connection():
+#     """Establish and return a database connection"""
+#     return mysql.connector.connect(**DB_CONFIG)
+
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="root"
+)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("CREATE DATABASE mybd")
 
 
 def init_database():
@@ -39,7 +50,6 @@ def init_database():
         """
         cursor.execute(create_table_query)
         connection.commit()
-        
         print("Database initialized successfully")
 
         cursor.close()

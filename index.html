@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Live Chat</title>
+    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>
+    <!-- Internal CSS Styling -->
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+        body {
+            background: #EEEEEE;
+            font-family: 'Roboto', sans-serif;
+        }
+        .card {
+            width: 300px;
+            border: none;
+            border-radius: 15px;
+        }
+        .adiv {
+            background: #04CB28;
+            border-radius: 15px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+            font-size: 13px;
+            height: 46px;
+        }
+        .chat {
+            border: none;
+            background: #E2FFE8;
+            font-size: 13px;
+            border-radius: 20px;
+        }
+        .bg-white {
+            border: 1px solid #E7E7E9;
+            font-size: 13px;
+            border-radius: 20px;
+        }
+        .myvideo img {
+            border-radius: 20px
+        }
+        .dot {
+            font-weight: bold;
+        }
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #F0F0F0;
+            font-size: 13px;
+        }
+        .form-control:focus {
+            box-shadow: none;
+        }
+        .form-control::placeholder {
+            font-size: 13px;
+            color: #C4C4C4;
+        }
+        .typing-indicator {
+            display: none;
+            font-style: italic;
+            color: #888;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        /* Ensure all text is 13px */
+        body, div, span, p, textarea, input {
+            font-size: 13px !important;
+        }
+    </style>
+</head>
+<body className='snippet-body'>
+    <!-- Container for the live chat -->
+<div class="container d-flex justify-content-center">
+     <!-- Card container for the chat interface -->
+    <div class="card mt-5">
+        <div class="d-flex flex-row justify-content-between p-3 adiv text-white">
+            <i class="fas fa-chevron-left"></i>
+            <span class="pb-3">Live chat</span>
+            <i class="fas fa-times"></i>
+        </div>
+        <!-- Chat messages container with scrolling enabled -->
+        <div id="chat-container" class="d-flex flex-column p-3" style="height: 400px; overflow-y: auto;">
+            <div class="d-flex flex-row p-3">
+                <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png" width="30" height="30">
+                <div class="chat ml-2 p-3">Hello! I am SteadFast AI Chatbot. How can I help you today?</div>
+            </div>
+        </div>
+        <!-- Typing indicator (hidden by default) -->
+        <div id="typing-indicator" class="typing-indicator">Bot is typing...</div>
+          <!-- User input field -->
+        <div class="form-group px-3">
+            <textarea id="message-input" class="form-control" rows="5" placeholder="Type your message"></textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Selecting elements from the DOM
+    const chatContainer = document.getElementById('chat-container');
+    const messageInput = document.getElementById('message-input');
+    const typingIndicator = document.getElementById('typing-indicator');
+
+    // Function to create a bot message bubble
+    function createBotMessageElement(text) {
+        const messageWrapper = document.createElement('div');
+        messageWrapper.classList.add('d-flex', 'flex-row', 'p-3');
+        messageWrapper.innerHTML = `
+            <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png" width="30" height="30">
+            <div class="chat ml-2 p-3">
+                <span class="text-muted bot-message"></span>
+            </div>
+        `;
+        return messageWrapper;
+    }
+
+    // Function to create a user message bubble
+    function createUserMessageElement(text) {
+        const messageWrapper = document.createElement('div');
+        messageWrapper.classList.add('d-flex', 'flex-row', 'p-3');
+        messageWrapper.innerHTML = `
+            <div class="ml-auto bg-white mr-2 p-3">
+                <span class="text-muted">${text}</span>
+            </div>
+            <img src="https://img.icons8.com/color/48/000000/circled-user-male-skin-type-7.png" width="30" height="30">
+        `;
+        return messageWrapper;
+    }
+
+    // Function to add a message to the chat container
+    function addMessage(content, type) {
+        let messageElement;
+
+        if (type === 'user') {
+            messageElement = createUserMessageElement(content);
+            chatContainer.appendChild(messageElement);
+        } else {
+            messageElement = createBotMessageElement(content);
+            chatContainer.appendChild(messageElement);
+            
+            // Slow typing effect
+            const botMessageSpan = messageElement.querySelector('.bot-message');
+            typeWriter(content, botMessageSpan);
+        }
+
+        // Always scroll to bottom
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function typeWriter(text, element) {
+        const slowness = 20;
+        element.textContent = '';
+        let i = 0;
+
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, slowness);
+                // Scroll to bottom while typing
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+
+        type();
+    }
+
+    async function sendMessage() {
+        const message = messageInput.value.trim();
+        
+        if (!message) return;
+
+        // Show typing indicator
+        typingIndicator.style.display = 'block';
+        
+        // Add user message
+        addMessage(message, 'user');
+        messageInput.value = '';
+
+        try {
+            const response = await fetch('http://localhost:9091/msg', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            
+            // Hide typing indicator
+            typingIndicator.style.display = 'none';
+
+            // Add bot response with slow typing
+            addMessage(data.response, 'bot');
+        } catch (error) {
+            console.error('Error:', error);
+            typingIndicator.style.display = 'none';
+            addMessage('Sorry, there was an error sending your message.', 'bot');
+        }
+    }
+
+    // Event listener for Enter key
+    messageInput.addEventListener('keydown', function(event) {
+        // Send on Enter without Shift key
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Prevent default Enter key behavior
+            sendMessage();
+        }
+    });
+</script>
+</body>
+</html>
